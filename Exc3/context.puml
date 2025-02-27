@@ -1,0 +1,35 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam database {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam person {
+  backgroundColor White
+  borderColor Black
+}
+
+person "Клиент" as Client
+component "Сайт" as Website
+component "Интернет-банк" as InternetBank
+component "АБС" as ABS
+component "Система кол-центра" as CallCenter
+component "СМС-шлюз" as SMSGateway
+person "Менеджер бэк-офиса" as BackOfficeManager
+
+Client --> Website : Использует
+Client --> InternetBank : Использует
+Website --> CallCenter : Передает заявку
+InternetBank --> ABS : Взаимодействует
+CallCenter --> ABS : Передает данные
+ABS --> SMSGateway : Отправляет уведомления
+BackOfficeManager --> ABS : Обрабатывает заявку
+
+@enduml
