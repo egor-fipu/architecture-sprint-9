@@ -1,0 +1,26 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam database {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam person {
+  backgroundColor White
+  borderColor Black
+}
+
+component "АБС" as ABS
+component "Система кол-центра" as CallCenter
+component "Партнёрский кол-центр" as PartnerCallCenter
+
+ABS --> CallCenter : Передает файл со ставками
+ABS --> PartnerCallCenter : Передает файл со ставками
+
+@enduml
