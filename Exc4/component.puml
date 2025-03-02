@@ -1,0 +1,42 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam database {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam person {
+  backgroundColor White
+  borderColor Black
+}
+
+package "АБС" {
+  component "Модуль формирования файла (PL/SQL)" as FileModule
+  component "Модуль передачи файла (FTP/SFTP)" as TransferModuleInner
+  component "Модуль передачи файла (по договоренности)" as TransferModulePartner
+}
+
+package "Система кол-центра" {
+  component "Модуль приема файла (Java Spring Boot)" as ReceiveModule
+  component "Модуль отображения ставок (React.js)" as DisplayModule
+}
+
+package "Партнёрский кол-центр" {
+  component "Модуль приема файла (по договоренности)" as PartnerReceiveModule
+  component "Модуль отображения ставок (по договоренности)" as PartnerDisplayModule
+}
+
+FileModule --> TransferModuleInner : Использует
+FileModule --> TransferModulePartner : Использует
+TransferModuleInner --> ReceiveModule : Передает файл
+TransferModulePartner --> PartnerReceiveModule : Передает файл (по договоренности)
+
+ReceiveModule --> DisplayModule : Использует
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam database {
+  backgroundColor White
+  borderColor Black
+}
+
+skinparam person {
+  backgroundColor White
+  borderColor Black
+}
+
+person "Клиент" as Client
+
+package "Интернет-банк" {
+  component "Веб-приложение (ASP.NET MVC)" as WebApp
+  database "База данных MS SQL" as MSSQL
+  component "Сервис обработки депозитов" as DepositService
+  component "Сервис СМС-уведомлений" as SMSService
+}
+
+package "АБС" {
+  component "Десктопное приложение (Delphi)" as DesktopApp
+  database "База данных Oracle" as OracleDB
+  component "Процедуры PL/SQL (Депозиты)" as PLSQLDeposits
+  component "Процедуры PL/SQL (Кредиты)" as PLSQLCredits
+  component "Управление ставками (Excel)" as ExcelRates
+}
+
+package "Сайт" {
+  component "Веб-приложение (PHP/React.js)" as WebsiteApp
+  database "База данных (MS SQL)" as WebsiteDB
+}
+
+package "Система кол-центра" {
+  component "Веб-интерфейс (React.js)" as CallCenterUI
+  component "Бэкенд (Java Spring Boot)" as CallCenterBackend
+  database "База данных PostgreSQL" as PostgreSQLDB
+}
+
+component "СМС-шлюз" as SMSGateway
+
+Client --> WebApp : Использует
+Client --> WebsiteApp : Использует
+
+WebApp --> MSSQL : Читает/Записывает
+WebApp --> DepositService : Использует
+DepositService --> MSSQL : Читает/Записывает
+DepositService --> SMSService : Использует
+WebApp --> SMSService : Использует
+
+DesktopApp --> OracleDB : Читает/Записывает
+DesktopApp --> PLSQLDeposits : Использует
+DesktopApp --> PLSQLCredits : Использует
+PLSQLDeposits --> ExcelRates : Использует
+PLSQLCredits --> ExcelRates : Использует
+
+WebsiteApp --> WebsiteDB : Читает/Записывает
+WebsiteApp --> CallCenterBackend : Передает заявку
+
+CallCenterUI --> CallCenterBackend : Использует
+CallCenterBackend --> PostgreSQLDB : Читает/Записывает
+CallCenterBackend --> PLSQLDeposits : Передает данные
+
+DepositService --> PLSQLDeposits : Взаимодействует
+
+PLSQLDeposits --> SMSGateway : Отправляет уведомления
+
+@enduml
